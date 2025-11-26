@@ -1,4 +1,4 @@
-#+title: Readme
+#+title: Azuma ANN RNN
 * Introduction
 I just want to use *LISP* in order to manage a simple /ANN/ and finally transform this one in a pretty simple /RNN/  
 * ANN
