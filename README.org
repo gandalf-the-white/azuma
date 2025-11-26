@@ -1,6 +1,6 @@
 #+title: Readme
 * Introduction
-I just want to use *LISP* in order to manage a simple /ANN/ and finally transform this one in a pretty simple /RNN/
+I just want to use *LISP* in order to manage a simple /ANN/ and finally transform this one in a pretty simple /RNN/  
 * ANN
 ** Scenario
 #+begin_src emacs-lisp
@@ -31,7 +31,7 @@ I just want to use *LISP* in order to manage a simple /ANN/ and finally transfor
                 :batch-size 2
                 :learning-rate 0.05))
 
-(export-loss-history-to-dat *loss-history* "loss_epochs.dat")
+(export-loss-history-to-dat *loss-history* "datas/loss_epochs.dat")
 #+end_src
 ** Loss evolution
 #+begin_src gnuplot :file datas/loss_epochs.png :results output graphics file :exports results
@@ -44,3 +44,51 @@ plot "datas/loss_epochs.dat" using 1:2 with linespoints title "Training loss"
 
 #+RESULTS:
 [[file:datas/loss_epochs.png]]
+* RNN
+** Scenario
+#+begin_src emacs-lisp
+(ql:quickload "cpu-mem-mlp")
+(in-package :cpu-mem-mlp)
+
+(defparameter *rnn* (make-rnn-network-2-4-2))
+
+;; Exemple : chaque séquence = 3 pas de temps, chaque x_t = #(cpu mem)
+(defparameter *seq1*
+  (vector
+   #(0.4 0.5)
+   #(0.6 0.3)
+   #(0.7 0.4)))
+
+(defparameter *seq2*
+  (vector
+   #(0.2 0.1)
+   #(0.3 0.2)
+   #(0.5 0.4)))
+
+;; Targets (CPU/MEM à t+1 par ex.)
+(defparameter *ys*
+  (vector
+   #(0.8 0.5)
+   #(0.6 0.3)))
+
+(defparameter *seqs*
+  (vector *seq1* *seq2*))
+
+(defparameter *rnn-loss-history*
+  (rnn-train-epochs *rnn* *seqs* *ys*
+                    :epochs 50
+                    :learning-rate 0.01))
+
+(export-loss-history-to-dat *rnn-loss-history* "datas/rnn_loss.dat")
+#+end_src
+** Loss evolution
+#+begin_src gnuplot :file datas/rnn_epochs.png :results output graphics file :exports results
+set xlabel "Epoch"
+set ylabel "Loss moyenne"
+set grid
+
+plot "datas/rnn_loss.dat" using 1:2 with linespoints title "RNN training loss"
+#+end_src
+
+#+RESULTS:
+[[file:datas/rnn_epochs.png]]

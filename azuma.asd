@@ -13,7 +13,9 @@
                  (:file "network")
                  (:file "loss")
                  (:file "training")
-                 (:file "data-export"))))
+                 (:file "data-export")
+                 (:file "rnn")
+                 (:file "rnn-training"))))
   :description ""
   :in-order-to ((test-op (test-op "azuma/tests"))))
 
