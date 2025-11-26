@@ -8,7 +8,12 @@
   :components ((:module "src"
                 :components
                 ((:file "package")
-                 (:file "main"))))
+                 (:file "utils")
+                 (:file "layers")
+                 (:file "network")
+                 (:file "loss")
+                 (:file "training")
+                 (:file "data-export"))))
   :description ""
   :in-order-to ((test-op (test-op "azuma/tests"))))
 

@@ -1,10 +1,46 @@
 #+title: Readme
 * Introduction
+I just want to use *LISP* in order to manage a simple /ANN/ and finally transform this one in a pretty simple /RNN/
+* ANN
+** Scenario
+#+begin_src emacs-lisp
+(push #P"project_directory" asdf:*central-registry*) ; If the project is outside 
 
-* Matrix
-#+attr_latex: :mode math :environment matrix
-| a | b |
-|-  |   |
-| c | b |
+(ql:quickload "azuma") ; ou (asdf:load-system "cpu-mem-mlp")
+(in-package :azuma)
 
+(defparameter *net* (make-mlp-2-4-2))
 
+(defparameter *xs*
+  (vector
+   #(0.4 0.5 0.6 0.3)
+   #(0.2 0.1 0.7 0.9)
+   #(0.1 0.9 0.3 0.4)
+   #(0.6 0.2 0.5 0.8)))
+
+(defparameter *ys*
+  (vector
+   #(0.5 0.4)
+   #(0.8 0.2)
+   #(0.3 0.7)
+   #(0.9 0.1)))
+
+(defparameter *loss-history*
+  (train-epochs *net* *xs* *ys*
+                :epochs 50
+                :batch-size 2
+                :learning-rate 0.05))
+
+(export-loss-history-to-dat *loss-history* "loss_epochs.dat")
+#+end_src
+** Loss evolution
+#+begin_src gnuplot :file datas/loss_epochs.png :results output graphics file :exports results
+set xlabel "Epoch"
+set ylabel "Loss moyenne"
+set grid
+
+plot "datas/loss_epochs.dat" using 1:2 with linespoints title "Training loss"
+#+end_src
+
+#+RESULTS:
+[[file:datas/loss_epochs.png]]
