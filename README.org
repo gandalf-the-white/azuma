@@ -92,3 +92,71 @@ plot "datas/rnn_loss.dat" using 1:2 with linespoints title "RNN training loss"
 
 #+RESULTS:
 [[file:datas/rnn_epochs.png]]
+* Prediction
+** Resume with the MLP
+We toke example on 2 hours
+#+begin_src emacs-lisp
+x = [CPU(t-1) MEM(t-1) CPU(t) MEM(t)]
+y_pred = [CPU(t+1) MEM(t+1)]
+#+end_src
++ Imagine that we build an input vector such as:
+  #+begin_src emacs-lisp
+;; last hours known
+(defparameter *cpu-t-1* 0.4)
+(defparameter *mem-t-1* 0.5)
+(defparameter *cpu-t*   0.6)
+(defparameter *mem-t*   0.3)
+
+(defparameter *x-new*
+  (vector *cpu-t-1* *mem-t-1* *cpu-t* *mem-t*))
+;; => #(0.4 0.5 0.6 0.3)
+  #+end_src
+We suppose the network trained
+#+begin_src emacs-lisp
+(defparameter *net* (make-mlp-2-4-2))
+;; ... puis tu l'as entraîné avec train-epochs ...
+#+end_src
+So the prediction can be done like this:
+#+begin_src emacs-lisp
+(defparameter *y-pred* (forward *net* *x-new*))
+;; => par ex. #(0.72 0.665) avant entraînement
+#+end_src
+and finally
+#+begin_src emacs-lisp
+(aref *y-pred* 0)  ;; prédiction CPU(t+1)
+(aref *y-pred* 1)  ;; prédiction MEM(t+1)
+#+end_src
+Obviously that values are standardized, that why we'll have to denormalize in % for example.
+** Resume with the RNN
+Now, our input is based on a huge vector with sequency of vectors (cpu, mem)
+#+begin_src emacs-lisp
+seq-x = [ x₁, x₂, ..., x_T ]
+x_t = [CPU(t), MEM(t)]
+#+end_src
+and the output prediction based on the sequency.
+So, imagine for the last 3 hours.
+#+begin_src emacs-lisp
+;; t-2, t-1, t (standardized)
+(defparameter *seq-x*
+  (vector
+   #(0.4 0.5)  ; CPU(t-2), MEM(t-2)
+   #(0.6 0.3)  ; CPU(t-1), MEM(t-1)
+   #(0.7 0.4))) ; CPU(t), MEM(t)
+#+end_src
+Obviously that the network is trained,
+#+begin_src emacs-lisp
+(defparameter *rnn* (make-rnn-network-2-4-2))
+;; ... puis entraîné avec rnn-train-epochs ...
+#+end_src
+The prediction method is pretty simple:
+#+begin_src emacs-lisp
+(defparameter *y-rnn-pred*
+  (rnn-forward-seq *rnn* *seq-x*))
+;; => par ex. #(0.65 0.55) (valeurs fictives)
+#+end_src
+and
+#+begin_src emacs-lisp
+(aref *y-rnn-pred* 0)  ;; CPU(t+1) prédit
+(aref *y-rnn-pred* 1)  ;; MEM(t+1) prédit
+#+end_src
+We don't forget to denormalize the result.
