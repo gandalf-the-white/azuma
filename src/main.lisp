@@ -106,12 +106,16 @@
         (setf (aref result j) row)))
     result))
 
-;; (defun forward-mlp (x)
-;;   ;; Couche cachee
-;;   (let* ((z1 (vec-add (mat-vec-mul *w1* x) *b1*))
-;;          (h (relu-vec z1))
-;;          (z2 (vec-add (mat-vec-mul *w2* h) *b2*)))
-;;     z2))
+(defun forward-mlp (x)
+  ;; Couche cachee
+  (let* ((z1 (vec-add (mat-vec-mul *w1* x) *b1*))
+         (h (relu-vec z1))
+         (z2 (vec-add (mat-vec-mul *w2* h) *b2*)))
+    z2))
+
+;;-------------------------------------
+;; Classe
+;;-------------------------------------
 
 (defclass dense-layer ()
   ((weights
@@ -155,7 +159,8 @@
                      (layer-bias layer)))
          (act (layer-activation layer))
          (out (if act
-                  (funcall act z))))
+                  (funcall act z)
+                  z)))
     (setf (layer-last-input layer) input
           (layer-last-z layer) z
           (layer-last-output layer) out)
@@ -257,6 +262,42 @@
     (apply-gradients! layer learning-rate)))
 
 ;;----------------------------------
+;; training
+;;----------------------------------
+
+;; (defun train-one-step (net x y learning-rate)
+;;  (let* ((y-hat (forward net x))
+;;         (loss nil)
+;;         (dloss-dy nil))
+;;    (multiple-value-setq (loss dloss-dy)
+;;      (mse-loss-and-grad y-hat y))
+;;    (format t "Loss = ~A~%" loss)
+;;    ;; backward : remplit les gradients dans chaque couche
+;;    (backward *net* dloss-dy)
+;;    (apply-gradients-network! net learning-rate)
+;;    (let* ((y-hat-new (forward net x))
+;;           (loss-new  (multiple-value-bind (l _)
+;;                          (mse-loss-and-grad y-hat-new y)
+;;                        l)))
+;;      (format t "Loss après update: ~A~%" loss-new))
+;;    ))
+
+(defun train-one-step (net x y learning-rate)
+  (let* ((y-hat (forward net x))
+         (loss  nil)
+         (dloss-dy nil))
+    (multiple-value-setq (loss dloss-dy)
+      (mse-loss-and-grad y-hat y))
+    (format t "Loss avant update: ~A~%" loss)
+    (backward net dloss-dy)
+    (apply-gradients-network! net learning-rate)
+    (let* ((y-hat-new (forward net x))
+           (loss-new  (multiple-value-bind (l _)
+                          (mse-loss-and-grad y-hat-new y)
+                        l)))
+      (format t "Loss après update: ~A~%" loss-new))))
+
+;;----------------------------------
 ;; exemple
 ;;----------------------------------
 
@@ -282,13 +323,14 @@
 
 (defparameter *y* #(0.5 0.4))
 
-;; (forward *net* *x*)
+(forward *net* *x*)
 
-(let* ((y-hat (forward *net* *x*))
-       (loss nil)
-       (dloss-dy nil))
-  (multiple-value-setq (loss dloss-dy)
-    (mse-loss-and-grad y-hat *y*))
-  (format t "Loss = ~A~%" loss)
-  ;; backward : remplit les gradients dans chaque couche
-  (backward *net* dloss-dy))
+;; (let* ((y-hat (forward *net* *x*))
+;;        (loss nil)
+;;        (dloss-dy nil))
+;;   (multiple-value-setq (loss dloss-dy)
+;;     (mse-loss-and-grad y-hat *y*))
+;;   (format t "Loss = ~A~%" loss)
+;;   ;; backward : remplit les gradients dans chaque couche
+;;   (backward *net* dloss-dy))
+
