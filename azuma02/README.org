@@ -1,0 +1,43 @@
+* Ann01 
+
+** Introduction
+
+** Graphic
+#+begin_src plantuml :file ./diagram.svg :results silent :exports none 
+@startuml NeuralNetwork
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+left to right direction
+
+rectangle "Entrée 3" as input3
+rectangle "Entrée 4" as input4
+rectangle "Entrée 1" as input1
+rectangle "Entrée 2" as input2
+
+circle "Neurone 1\n(somme + activation)" as hidden1
+circle "Neurone 2\n(somme + activation)" as hidden2
+
+rectangle "Sortie 1" as output1
+rectangle "Sortie 2" as output2
+
+input1 --> hidden1
+input2 --> hidden1
+input3 --> hidden1
+input4 --> hidden1
+
+input1 --> hidden2
+input2 --> hidden2
+input3 --> hidden2
+input4 --> hidden2
+
+hidden1 --> output1
+hidden2 --> output1
+hidden1 --> output2
+hidden2 --> output2
+
+@enduml
+#+end_src
+
+[[file:diagram.svg]]
