@@ -7,5 +7,10 @@
   :depends-on ()
   :components ((:module "src"
                 :components
-                ((:file "main"))))
+                ((:file "package")
+                 (:file "utils")
+                 (:file "layers")
+                 (:file "network")
+                 (:file "loss")
+                 (:file "training"))))
   :description "")

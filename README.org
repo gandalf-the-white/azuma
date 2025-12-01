@@ -2,7 +2,7 @@
 * Introduction
 I just want to use *LISP* in order to manage a simple /ANN/ and finally transform this one in a pretty simple /RNN/  
 * ANN
-** Scenario
+** Scenario azuma 1
 #+begin_src emacs-lisp
 (push #P"project_directory" asdf:*central-registry*) ; If the project is outside 
 
@@ -33,6 +33,37 @@ I just want to use *LISP* in order to manage a simple /ANN/ and finally transfor
 
 (export-loss-history-to-dat *loss-history* "datas/loss_epochs.dat")
 #+end_src
+
+** Scenario azuma 2
+#+begin_src emacs-lisp
+(ql:quickload "cpu-mem-mlp") ; ou (asdf:load-system "cpu-mem-mlp")
+(in-package :cpu-mem-mlp)
+
+(defparameter *net* (make-mlp-2-4-2))
+
+(defparameter *xs*
+  (vector
+   #(0.4 0.5 0.6 0.3)
+   #(0.2 0.1 0.7 0.9)
+   #(0.1 0.9 0.3 0.4)
+   #(0.6 0.2 0.5 0.8)))
+
+(defparameter *ys*
+  (vector
+   #(0.5 0.4)
+   #(0.8 0.2)
+   #(0.3 0.7)
+   #(0.9 0.1)))
+
+(defparameter *loss-history*
+  (train-epochs *net* *xs* *ys*
+                :epochs 50
+                :batch-size 2
+                :learning-rate 0.05))
+
+(export-loss-history-to-dat *loss-history* "loss_epochs.dat")
+#+end_src
+
 ** Loss evolution
 #+begin_src gnuplot :file datas/loss_epochs.png :results output graphics file :exports results
 set xlabel "Epoch"
@@ -41,11 +72,9 @@ set grid
 
 plot "datas/loss_epochs.dat" using 1:2 with linespoints title "Training loss"
 #+end_src
-
-#+RESULTS:
-[[file:datas/loss_epochs.png]]
 * RNN
-** Scenario
+** Scenario azuma01
+
 #+begin_src emacs-lisp
 (ql:quickload "cpu-mem-mlp")
 (in-package :cpu-mem-mlp)
@@ -78,9 +107,8 @@ plot "datas/loss_epochs.dat" using 1:2 with linespoints title "Training loss"
   (rnn-train-epochs *rnn* *seqs* *ys*
                     :epochs 50
                     :learning-rate 0.01))
-
-(export-loss-history-to-dat *rnn-loss-history* "datas/rnn_loss.dat")
 #+end_src
+
 ** Loss evolution
 #+begin_src gnuplot :file datas/rnn_epochs.png :results output graphics file :exports results
 set xlabel "Epoch"
