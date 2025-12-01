@@ -181,15 +181,15 @@ circle "Neurone 2\n(somme + activation)" as hidden2
 rectangle "Sortie 1" as output1
 rectangle "Sortie 2" as output2
 
-input1 --> hidden1 : w11
-input2 --> hidden1 : w12
-input3 --> hidden1 : w13
-input4 --> hidden1 : w14
+input1 --> hidden1 #text:red : w11
+input2 --> hidden1 #text:red : w12
+input3 --> hidden1 #text:red : w13
+input4 --> hidden1 #text:red : w14
 
-input1 --> hidden2 #red;text:red : w21
-input2 --> hidden2 #red;text:red : w22
-input3 --> hidden2 #red;text:red : w23
-input4 --> hidden2 #red;text:red : w24
+input1 --> hidden2 #text:red : w21
+input2 --> hidden2 #text:red : w22
+input3 --> hidden2 #text:red : w23
+input4 --> hidden2 #text:red : w24
 
 hidden1 --> output1
 hidden2 --> output1
