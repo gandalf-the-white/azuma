@@ -168,7 +168,6 @@ We don't forget to denormalize the result.
 skinparam monochrome false
 skinparam shadowing false
 skinparam defaultFontName Arial
-left to right direction
 
 rectangle "Entrée 3" as input3
 rectangle "Entrée 4" as input4
