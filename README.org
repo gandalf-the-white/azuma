@@ -168,27 +168,32 @@ We don't forget to denormalize the result.
 skinparam monochrome false
 skinparam shadowing false
 skinparam defaultFontName Arial
+left to right direction
 
-rectangle "Entrée 3" as input3
-rectangle "Entrée 4" as input4
-rectangle "Entrée 1" as input1
-rectangle "Entrée 2" as input2
+skinparam rectangle<<behavior>> {
+	roundCorner 25
+}
 
-circle "Neurone 1\n(somme + activation)" as hidden1
-circle "Neurone 2\n(somme + activation)" as hidden2
+rectangle "Input 1" as input1 #ADD1B2
+rectangle "Input 4" as input4 #ADD1B2
+rectangle "Input 3" as input3 #ADD1B2
+rectangle "Input 2" as input2 #ADD1B2
 
-rectangle "Sortie 1" as output1
-rectangle "Sortie 2" as output2
+usecase "Neuron 1\n sum + act" as hidden1
+usecase "Neuron 2\n sum + act" as hidden2
 
-input1 --> hidden1 #text:red : w11
-input2 --> hidden1 #text:red : w12
-input3 --> hidden1 #text:red : w13
-input4 --> hidden1 #text:red : w14
+rectangle "Output 1" as output1 #A9DCDF
+rectangle "Output 2" as output2 #A9DCDF
 
-input1 --> hidden2 #text:red : w21
-input2 --> hidden2 #text:red : w22
-input3 --> hidden2 #text:red : w23
-input4 --> hidden2 #text:red : w24
+input1 --> hidden1 #text:blue : w11
+input2 --> hidden1 #text:blue : w12
+input3 --> hidden1 #text:blue : w13
+input4 --> hidden1 #text:blue : w14
+
+input1 --> hidden2 #text:blue : w21
+input2 --> hidden2 #text:blue : w22
+input3 --> hidden2 #text:blue : w23
+input4 --> hidden2 #text:blue : w24
 
 hidden1 --> output1
 hidden2 --> output1
