@@ -165,7 +165,7 @@ We don't forget to denormalize the result.
 #+begin_src plantuml :file datas/diagram.svg :results silent :exports none 
 @startuml NeuralNetwork
 
-skinparam monochrome true
+skinparam monochrome false
 skinparam shadowing false
 skinparam defaultFontName Arial
 left to right direction
