@@ -20,7 +20,7 @@
 (defun relu (x)
   (max 0 x))
 
-(defun relu-vector (v)
+(defun relu-vec (v)
   (map 'vector #'relu v))
 
 (defun relu-deriv-vec (z)
